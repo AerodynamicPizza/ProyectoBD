@@ -49,7 +49,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Crear Tablas.txt" />
+  </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Modelo\ModeloGestionadorProyectos.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
