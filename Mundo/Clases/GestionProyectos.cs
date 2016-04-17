@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mundo
+namespace Mundo.Clases
 {
-    public class Class1
+    class GestionProyectos
     {
     }
 }

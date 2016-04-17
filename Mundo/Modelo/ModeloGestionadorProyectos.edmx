@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="ModeloGestionadorProyectos.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="ModeloGestionadorProyectosTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ModeloGestionadorProyectos" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="ModeloGestionadorProyectosContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Proyectos" EntityType="ModeloGestionadorProyectos.Proyecto" />
+          <EntitySet Name="Estados" EntityType="ModeloGestionadorProyectos.Estado" />
+          <EntitySet Name="Gerentes" EntityType="ModeloGestionadorProyectos.Gerente" />
+          <EntitySet Name="Categorias" EntityType="ModeloGestionadorProyectos.Categoria" />
+          <EntitySet Name="Actividades" EntityType="ModeloGestionadorProyectos.Actividad" />
+          <AssociationSet Name="GerenteProyecto" Association="ModeloGestionadorProyectos.GerenteProyecto">
+            <End Role="Gerente" EntitySet="Gerentes" />
+            <End Role="Proyecto" EntitySet="Proyectos" />
+          </AssociationSet>
+          <AssociationSet Name="ProyectoActividad" Association="ModeloGestionadorProyectos.ProyectoActividad">
+            <End Role="Proyecto" EntitySet="Proyectos" />
+            <End Role="Actividad" EntitySet="Actividades" />
+          </AssociationSet>
+          <AssociationSet Name="CategoriaCategoria" Association="ModeloGestionadorProyectos.CategoriaCategoria">
+            <End Role="Categoria" EntitySet="Categorias" />
+            <End Role="Categoria1" EntitySet="Categorias" />
+          </AssociationSet>
+          <EntitySet Name="DependenciasActs" EntityType="ModeloGestionadorProyectos.DependenciaAct" />
+          <AssociationSet Name="ActividadDependenciaAct" Association="ModeloGestionadorProyectos.ActividadDependenciaAct">
+            <End Role="Actividad" EntitySet="Actividades" />
+            <End Role="DependenciaAct" EntitySet="DependenciasActs" />
+          </AssociationSet>
+          <AssociationSet Name="ActividadDependenciaAct1" Association="ModeloGestionadorProyectos.ActividadDependenciaAct1">
+            <End Role="Actividad" EntitySet="Actividades" />
+            <End Role="DependenciaAct" EntitySet="DependenciasActs" />
+          </AssociationSet>
+          <AssociationSet Name="ActividadEstado" Association="ModeloGestionadorProyectos.ActividadEstado">
+            <End Role="Actividad" EntitySet="Actividades" />
+            <End Role="Estado" EntitySet="Estados" />
+          </AssociationSet>
+          <AssociationSet Name="ActividadCategoria" Association="ModeloGestionadorProyectos.ActividadCategoria">
+            <End Role="Actividad" EntitySet="Actividades" />
+            <End Role="Categoria" EntitySet="Categorias" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Proyecto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha_Inicio" Type="DateTime" Nullable="false" />
+          <Property Name="Fecha_Fin" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Gerente" Relationship="ModeloGestionadorProyectos.GerenteProyecto" FromRole="Proyecto" ToRole="Gerente" />
+          <Property Name="GerenteId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Actividades" Relationship="ModeloGestionadorProyectos.ProyectoActividad" FromRole="Proyecto" ToRole="Actividad" />
+        </EntityType>
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="Consecutivo" />
+          </Key>
+          <Property Name="Consecutivo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" />
+          <NavigationProperty Name="Actividades" Relationship="ModeloGestionadorProyectos.ActividadEstado" FromRole="Estado" ToRole="Actividad" />
+        </EntityType>
+        <EntityType Name="Gerente">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" />
+          <Property Name="Telefono" Type="String" Nullable="false" />
+          <NavigationProperty Name="Proyectos" Relationship="ModeloGestionadorProyectos.GerenteProyecto" FromRole="Gerente" ToRole="Proyecto" />
+        </EntityType>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" />
+          <NavigationProperty Name="Subcategorias" Relationship="ModeloGestionadorProyectos.CategoriaCategoria" FromRole="Categoria" ToRole="Categoria1" />
+          <NavigationProperty Name="Supercategoria" Relationship="ModeloGestionadorProyectos.CategoriaCategoria" FromRole="Categoria1" ToRole="Categoria" />
+          <Property Name="CategoriaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Actividades" Relationship="ModeloGestionadorProyectos.ActividadCategoria" FromRole="Categoria" ToRole="Actividad" />
+        </EntityType>
+        <EntityType Name="Actividad">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Prioridad" Type="String" Nullable="false" />
+          <Property Name="Fecha_Inicio" Type="DateTime" Nullable="false" />
+          <Property Name="Fecha_Fin" Type="DateTime" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" />
+          <Property Name="Temporalidad" Type="String" Nullable="false" />
+          <Property Name="CantidadRepeticiones" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Proyecto" Relationship="ModeloGestionadorProyectos.ProyectoActividad" FromRole="Actividad" ToRole="Proyecto" />
+          <Property Name="ProyectoId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ActividadesDependientes" Relationship="ModeloGestionadorProyectos.ActividadDependenciaAct" FromRole="Actividad" ToRole="DependenciaAct" />
+          <NavigationProperty Name="ActividadesRequisito" Relationship="ModeloGestionadorProyectos.ActividadDependenciaAct1" FromRole="Actividad" ToRole="DependenciaAct" />
+          <NavigationProperty Name="Estado" Relationship="ModeloGestionadorProyectos.ActividadEstado" FromRole="Actividad" ToRole="Estado" />
+          <Property Name="EstadoConsecutivo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Categoria" Relationship="ModeloGestionadorProyectos.ActividadCategoria" FromRole="Actividad" ToRole="Categoria" />
+          <Property Name="CategoriaId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="GerenteProyecto">
+          <End Type="ModeloGestionadorProyectos.Gerente" Role="Gerente" Multiplicity="1" />
+          <End Type="ModeloGestionadorProyectos.Proyecto" Role="Proyecto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gerente">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Proyecto">
+              <PropertyRef Name="GerenteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProyectoActividad">
+          <End Type="ModeloGestionadorProyectos.Proyecto" Role="Proyecto" Multiplicity="1" />
+          <End Type="ModeloGestionadorProyectos.Actividad" Role="Actividad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proyecto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Actividad">
+              <PropertyRef Name="ProyectoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CategoriaCategoria">
+          <End Type="ModeloGestionadorProyectos.Categoria" Role="Categoria" Multiplicity="1" />
+          <End Type="ModeloGestionadorProyectos.Categoria" Role="Categoria1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Categoria1">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DependenciaAct" >
+          <Key>
+            <PropertyRef Name="ActividadRequisitoId" />
+            <PropertyRef Name="ActividadDependienteId" />
+          </Key>
+          <NavigationProperty Name="ActividadRequisito" Relationship="ModeloGestionadorProyectos.ActividadDependenciaAct" FromRole="DependenciaAct" ToRole="Actividad" />
+          <Property Name="ActividadRequisitoId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ActividadDependiente" Relationship="ModeloGestionadorProyectos.ActividadDependenciaAct1" FromRole="DependenciaAct" ToRole="Actividad" />
+          <Property Name="ActividadDependienteId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ActividadDependenciaAct">
+          <End Type="ModeloGestionadorProyectos.Actividad" Role="Actividad" Multiplicity="1" />
+          <End Type="ModeloGestionadorProyectos.DependenciaAct" Role="DependenciaAct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actividad">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DependenciaAct">
+              <PropertyRef Name="ActividadRequisitoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ActividadDependenciaAct1">
+          <End Type="ModeloGestionadorProyectos.Actividad" Role="Actividad" Multiplicity="1" />
+          <End Type="ModeloGestionadorProyectos.DependenciaAct" Role="DependenciaAct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actividad">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DependenciaAct">
+              <PropertyRef Name="ActividadDependienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ActividadEstado">
+          <End Type="ModeloGestionadorProyectos.Actividad" Role="Actividad" Multiplicity="*" />
+          <End Type="ModeloGestionadorProyectos.Estado" Role="Estado" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="Consecutivo" />
+            </Principal>
+            <Dependent Role="Actividad">
+              <PropertyRef Name="EstadoConsecutivo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ActividadCategoria">
+          <End Type="ModeloGestionadorProyectos.Actividad" Role="Actividad" Multiplicity="*" />
+          <End Type="ModeloGestionadorProyectos.Categoria" Role="Categoria" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Actividad">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="ModeloGestionadorProyectos" />
+        <Alias Key="Target" Value="ModeloGestionadorProyectos.Store" />
+        <EntityContainerMapping CdmEntityContainer="ModeloGestionadorProyectosContainer" StorageEntityContainer="ModeloGestionadorProyectosTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
