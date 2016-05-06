@@ -1,0 +1,69 @@
+CREATE OR REPLACE PACKAGE pkEstadosNivel1 as
+  procedure pAgregarEstado(iNom estados.nombre%type, iDescrip estados.descripcion%type);
+  procedure pEliminarEstado(iCons estados.consecutivo%type);
+  procedure pActualizarEstado(iConsecutivo ESTADOS.CONSECUTIVO%type, iNombre ESTADOS.NOMBRE%type, iDescripcion ESTADOS.DESCRIPCION%type);
+  FUNCTION fConsultarEstado(iCons ESTADOS.CONSECUTIVO%TYPE) RETURN ESTADOS%ROWTYPE;
+END pkEstadosNivel1;
+/
+CREATE OR REPLACE PACKAGE BODY pkEstadosNivel1 as
+
+  procedure pAgregarEstado(iNom estados.nombre%type, iDescrip estados.descripcion%type)
+  is
+
+    vConsec NUMBER;
+
+    BEGIN
+      select NVL(max(consecutivo),0)+1 into vConsec from estados;
+
+      INSERT INTO ESTADOS
+      VALUES (vConsec, iNom, iDescrip);
+
+      EXCEPTION
+
+        WHEN Others then raise_application_error(-20001, 'Error al insertar estados.'||SQLERRM);
+
+    END pAgregarEstado;
+
+  procedure pEliminarEstado(iCons estados.consecutivo%type) is
+    BEGIN
+
+      DELETE ESTADOS
+
+      WHERE consecutivo=iCons;
+
+    EXCEPTION
+
+      WHEN Others then raise_application_error(-20001, 'Error al eliminar estado. '||SQLERRM);
+
+    END pEliminarEstado;
+
+  procedure pActualizarEstado(iConsecutivo ESTADOS.CONSECUTIVO%type, iNombre ESTADOS.NOMBRE%type, iDescripcion ESTADOS.DESCRIPCION%type) is
+    BEGIN
+
+      UPDATE ESTADOS
+      SET nombre=iNombre, descripcion=iDescripcion
+      WHERE consecutivo=iConsecutivo;
+
+    EXCEPTION
+
+      WHEN Others then raise_application_error(-20001, 'Error al actualizar la informacion del estado.'||SQLERRM);
+
+    END pActualizarEstado;
+
+  FUNCTION fConsultarEstado(iCons ESTADOS.CONSECUTIVO%TYPE) RETURN ESTADOS%ROWTYPE
+  IS
+
+    Estado ESTADOS%ROWTYPE;
+
+  BEGIN
+
+    SELECT * INTO Estado
+    FROM ESTADOS
+    WHERE CONSECUTIVO = iCons;
+
+    RETURN Estado;
+
+  END fConsultarEstado;
+
+END pkEstadosNivel1;
+/

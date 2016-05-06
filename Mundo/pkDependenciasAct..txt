@@ -1,0 +1,91 @@
+CREATE OR REPLACE PACKAGE pkDependenciaAct as
+    PROCEDURE pAgregarDependenciaAct(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE, ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE);
+    PROCEDURE pEliminarDepActPorActDep(ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE);
+    PROCEDURE pEliminarDepActPorActReq(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE);
+    PROCEDURE pEliminarDependenciaAct(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE, ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE);
+    PROCEDURE pDarDependenciaActPorActDep(ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE);
+    PROCEDURE pDarDependenciaActPorActReq(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE);
+END pkDependenciaAct;
+/
+CREATE OR REPLACE PACKAGE BODY pkDependenciaAct as
+    PROCEDURE pAgregarDependenciaAct(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE, ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE) IS
+    BEGIN
+        INSERT INTO DEPENDENCIASACTS
+        VALUES (ivActRequisito, ivActDependiente);
+    EXCEPTION 
+        WHEN Others then
+        raise_application_error(-20001, 'Error al insertar Dependencias de actividad.'||SQLERRM);
+    END pAgregarDependenciaAct;
+  
+   PROCEDURE pEliminarDepActPorActDep(ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE) IS
+   BEGIN
+        DELETE DEPENDENCIASACTS
+        WHERE ACTIVIDADDEPENDIENTEID = ivActDependiente;
+    EXCEPTION 
+        WHEN Others then
+        raise_application_error(-20001, 'Error al eliminar dependencia de actividad. '||SQLERRM);
+    END pEliminarDepActPorActDep;
+    
+    PROCEDURE pEliminarDepActPorActReq(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE) IS
+    BEGIN
+        DELETE DEPENDENCIASACTS
+        WHERE ACTIVIDADREQUISITOID = ivActRequisito;
+    EXCEPTION 
+        WHEN Others then
+        raise_application_error(-20001, 'Error al eliminar dependencia de actividad. '||SQLERRM);
+    END pEliminarDepActPorActReq;
+    
+    PROCEDURE pEliminarDependenciaAct(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE, ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE) IS
+     BEGIN
+        DELETE DEPENDENCIASACTS
+        WHERE ACTIVIDADDEPENDIENTEID = ivActDependiente 
+        AND ACTIVIDADREQUISITOID = ivActRequisito;
+    EXCEPTION 
+        WHEN Others then
+        raise_application_error(-20001, 'Error al eliminar dependencia de actividad. '||SQLERRM);
+    END pEliminarDependenciaAct;
+    
+    PROCEDURE pDarDependenciaActPorActDep(ivActDependiente DEPENDENCIASACTS.ActividadDependienteId%TYPE) IS
+      
+    CURSOR cuDependencias IS 
+      SELECT *
+      FROM DEPENDENCIASACTS d
+      WHERE d.ACTIVIDADDEPENDIENTEID = ivActDependiente;
+                             
+    BEGIN
+      
+      FOR X IN cuDependencias LOOP
+      
+          DBMS_OUTPUT.PUT_LINE('Actividad Requisito: ' || X.ActividadRequisitoId);
+          DBMS_OUTPUT.PUT_LINE('Actividad Dependiente: ' || X.ActividadDependienteId);
+        END LOOP;
+      
+      EXCEPTION
+      
+      WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('Error al consultar dependencia de actividad. ' || SQLERRM);
+            
+      END pDarDependenciaActPorActDep;
+          
+    PROCEDURE pDarDependenciaActPorActReq(ivActRequisito DEPENDENCIASACTS.ActividadRequisitoId%TYPE) IS
+      
+    CURSOR cuDependencias IS 
+      SELECT *
+      FROM DEPENDENCIASACTS d
+      WHERE d.ACTIVIDADREQUISITOID = ivActRequisito;
+                             
+    BEGIN
+      
+      FOR X IN cuDependencias LOOP
+      
+          DBMS_OUTPUT.PUT_LINE('Actividad Requisito: ' || X.ActividadRequisitoId);
+          DBMS_OUTPUT.PUT_LINE('Actividad Dependiente: ' || X.ActividadDependienteId);
+        END LOOP;
+      
+      EXCEPTION
+      
+      WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('Error al consultar dependencia de actividad. ' || SQLERRM);
+            
+      END pDarDependenciaActPorActReq;
+      
+END pkDependenciaAct;
+/

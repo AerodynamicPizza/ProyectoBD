@@ -1,0 +1,168 @@
+CREATE OR REPLACE PACKAGE pkGerentesNivel1 AS
+  FUNCTION fValidarGerente(iId NUMBER)
+    RETURN NUMBER;
+  PROCEDURE pAgregarGerente(iId NUMBER, iNombre VARCHAR, iTelefono VARCHAR);
+  PROCEDURE pEliminarGerente(iId NUMBER);
+  PROCEDURE pModificarNombreGerente(iId NUMBER, iNombre VARCHAR);
+  PROCEDURE pModificarTelefonoGerente(iId NUMBER, iTelefono VARCHAR);
+  FUNCTION fConsultarGerente(iId NUMBER)
+    RETURN GERENTES%ROWTYPE;
+END pkGerentesNivel1;
+/
+CREATE OR REPLACE PACKAGE BODY pkGerentesNivel1 AS
+
+  FUNCTION fValidarGerente(iId NUMBER)
+    RETURN NUMBER
+
+  IS
+
+    vID GERENTES.ID%TYPE;
+
+    BEGIN
+
+      SELECT ger.ID
+      INTO vID
+      FROM Gerentes ger
+      WHERE ger.ID = iId;
+
+      RETURN 1;
+
+      EXCEPTION
+
+      WHEN NO_DATA_FOUND
+      THEN RETURN 0;
+
+    END fValidarGerente;
+
+  PROCEDURE pAgregarGerente(iId NUMBER, iNombre VARCHAR, iTelefono VARCHAR)
+
+  IS
+
+    existeGerente NUMBER;
+
+    BEGIN
+
+      existeGerente := fValidarGerente(iId);
+
+      IF existeGerente = 0
+      THEN
+
+        INSERT INTO Gerentes
+        (
+          Id,
+          Nombre,
+          Telefono
+        )
+        VALUES
+          (
+            iId,
+            iNombre,
+            iTelefono
+          );
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE('El gerente con ID ' || iId || ' NO se puede agregar porque ya existe!!');
+
+      END IF;
+
+    END pAgregarGerente;
+
+  PROCEDURE pEliminarGerente(iId NUMBER)
+
+  IS
+
+    existeGerente NUMBER;
+
+    BEGIN
+
+      existeGerente := fValidarGerente(iId);
+
+      IF existeGerente = 1
+      THEN
+
+        DELETE FROM Gerentes ger
+        WHERE ger.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE('El gerente con ID'  || iId || ' NO se puede eliminar porque NO existe!!');
+
+      END IF;
+
+    END pEliminarGerente;
+
+  PROCEDURE pModificarNombreGerente(iId NUMBER, iNombre VARCHAR)
+
+  IS
+
+    existeGerente NUMBER;
+
+    BEGIN
+
+      existeGerente := fValidarGerente(iId);
+
+      IF existeGerente = 1
+      THEN
+
+        UPDATE Gerentes ger
+        SET ger.Nombre = iNombre
+        WHERE ger.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE('El nombre del gerente con ID ' || iId || ' NO se puede modificar porque NO existe!!');
+
+      END IF;
+
+    END pModificarNombreGerente;
+
+  PROCEDURE pModificarTelefonoGerente(iId NUMBER, iTelefono VARCHAR)
+
+  IS
+
+    existeGerente NUMBER;
+
+    BEGIN
+
+      existeGerente := fValidarGerente(iId);
+
+      IF existeGerente = 1
+      THEN
+
+        UPDATE Gerentes ger
+        SET ger.Telefono = iTelefono
+        WHERE ger.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE(
+            'El telefono del gerente con ID ' || iId || ' NO se puede modificar porque NO existe!!');
+
+      END IF;
+
+    END pModificarTelefonoGerente;
+
+  FUNCTION fConsultarGerente(iId NUMBER)
+    RETURN GERENTES%ROWTYPE
+
+  IS
+
+    Gerente GERENTES%ROWTYPE;
+
+    BEGIN
+
+      SELECT *
+      INTO Gerente
+      FROM Gerentes ger
+      WHERE ger.ID = iId;
+
+      RETURN Gerente;
+
+      EXCEPTION
+
+      WHEN NO_DATA_FOUND
+      THEN DBMS_OUTPUT.PUT_LINE('El gerente con ID '|| iId || ' NO existe!!');
+
+    END fConsultarGerente;
+
+END pkGerentesNivel1;

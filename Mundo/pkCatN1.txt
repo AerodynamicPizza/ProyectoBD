@@ -1,0 +1,48 @@
+CREATE OR REPLACE PACKAGE pkCategoriaNivel1 IS
+  PROCEDURE pAgregarCategoria(iID          CATEGORIAS.ID%TYPE, iNOMBRE CATEGORIAS.NOMBRE%TYPE,
+                              iDESCRIPCION CATEGORIAS.DESCRIPCION%TYPE,
+                              iPADREID     CATEGORIAS.CATEGORIAID%TYPE);
+
+  PROCEDURE pEliminarCategoria(iID CATEGORIAS.ID%TYPE);
+  FUNCTION fConsultarCategoria (iID CATEGORIAS.ID%TYPE) RETURN CATEGORIAS%ROWTYPE;
+END pkCategoriaNivel1;
+/
+
+CREATE OR REPLACE PACKAGE BODY pkCategoriaNivel1 IS
+
+  PROCEDURE pAgregarCategoria(iID          CATEGORIAS.ID%TYPE, iNOMBRE CATEGORIAS.NOMBRE%TYPE,
+                              iDESCRIPCION CATEGORIAS.DESCRIPCION%TYPE,
+                              iPADREID     CATEGORIAS.CATEGORIAID%TYPE) IS
+    BEGIN
+
+      INSERT INTO CATEGORIAS
+      VALUES (iID, iNOMBRE, iDESCRIPCION, iPADREID);
+
+    END pAgregarCategoria;
+
+  PROCEDURE pEliminarCategoria(iID CATEGORIAS.ID%TYPE) IS
+
+  BEGIN
+
+    DELETE FROM CATEGORIAS
+    WHERE CATEGORIAS.ID = iID;
+
+  END pEliminarCategoria;
+
+  FUNCTION fConsultarCategoria (iID CATEGORIAS.ID%TYPE) RETURN CATEGORIAS%ROWTYPE
+  IS
+
+    Categoria CATEGORIAS%ROWTYPE;
+
+  BEGIN
+
+    SELECT * INTO Categoria
+    FROM CATEGORIAS
+    WHERE ID = iID;
+
+    RETURN Categoria;
+
+  END fConsultarCategoria;
+
+END pkCategoriaNivel1;
+/

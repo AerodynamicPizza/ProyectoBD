@@ -1,0 +1,188 @@
+CREATE OR REPLACE PACKAGE pkProyectosNivel1 AS
+  FUNCTION fValidarProyecto (iId NUMBER) RETURN NUMBER;
+  PROCEDURE pAgregarProyecto (iId NUMBER, iFechaInicio DATE, iFechaFin DATE, iGerenteId NUMBER);
+  PROCEDURE pEliminarProyecto (iId NUMBER);
+  PROCEDURE pModificarFechaInicioProyecto (iId NUMBER, iFechaInicio DATE);
+  PROCEDURE pModificarFechaFinProyecto (iId NUMBER, iFechaFin DATE);
+  PROCEDURE pModificarGerenteProyecto (iId NUMBER, iGerenteId NUMBER);
+  FUNCTION fConsultarProyecto (iId NUMBER) RETURN PROYECTOS%ROWTYPE;
+END pkProyectosNivel1;
+/
+CREATE OR REPLACE PACKAGE BODY pkProyectosNivel1 AS
+
+  -- Implementación Función 1
+
+  FUNCTION fValidarProyecto(iId NUMBER) RETURN NUMBER
+
+  IS
+
+    vID PROYECTOS.ID%TYPE;
+
+    BEGIN
+
+      SELECT pro.ID into vID
+      FROM Proyectos pro
+      WHERE pro.ID = iId;
+
+      RETURN 1;
+
+      EXCEPTION
+
+      WHEN NO_DATA_FOUND
+      THEN RETURN 0;
+
+    END fValidarProyecto;
+
+  -- Implementación Procedimiento 1
+
+  PROCEDURE pAgregarProyecto (iId NUMBER, iFechaInicio DATE, iFechaFin DATE, iGerenteId NUMBER)
+
+  IS
+
+    existeProyecto NUMBER;
+
+    BEGIN
+
+      existeProyecto:= fValidarProyecto(iId);
+
+      IF existeProyecto = 0 THEN
+
+        INSERT INTO Proyectos
+        VALUES (iId,iFechaInicio,iFechaFin,iGerenteId);
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no se puede agregar porque ya existe!!');
+
+      END IF;
+
+    END pAgregarProyecto;
+
+  -- Implementación Procedimiento 2
+
+  PROCEDURE pEliminarProyecto (iId NUMBER)
+
+  IS
+
+    existeProyecto NUMBER;
+
+    BEGIN
+
+      existeProyecto:= fValidarProyecto(iId);
+
+      IF existeProyecto = 1 THEN
+
+        DELETE FROM Proyectos pro
+        WHERE pro.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no se puede eliminar porque no existe!!');
+
+      END IF;
+
+    END pEliminarProyecto;
+
+  -- Implementación Procedimiento 3
+
+  PROCEDURE pModificarFechaInicioProyecto (iId NUMBER, iFechaInicio DATE)
+
+  IS
+
+    existeProyecto NUMBER;
+
+    BEGIN
+
+      existeProyecto:= fValidarProyecto(iId);
+
+      IF existeProyecto = 1 THEN
+
+        UPDATE Proyectos pro
+        SET pro.Fecha_Inicio = iFechaInicio
+        WHERE pro.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no se puede modificar porque no existe!!');
+
+      END IF;
+
+    END pModificarFechaInicioProyecto;
+
+  -- Implementación Procedimiento 4
+
+  PROCEDURE pModificarFechaFinProyecto (iId NUMBER, iFechaFin DATE)
+
+  IS
+
+    existeProyecto NUMBER;
+
+    BEGIN
+
+      existeProyecto:= fValidarProyecto(iId);
+
+      IF existeProyecto = 1 THEN
+
+        UPDATE Proyectos pro
+        SET pro.Fecha_Fin = iFechaFin
+        WHERE pro.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no se puede modificar porque no existe!!');
+
+      END IF;
+
+    END pModificarFechaFinProyecto;
+
+  -- Implementación Procedimiento 5
+
+  PROCEDURE pModificarGerenteProyecto (iId NUMBER, iGerenteId NUMBER)
+
+  IS
+
+    existeProyecto NUMBER;
+
+    BEGIN
+
+      existeProyecto:= fValidarProyecto(iId);
+
+      IF existeProyecto = 1 THEN
+
+        UPDATE Proyectos pro
+        SET pro.GerenteId = iGerenteId
+        WHERE pro.ID = iId;
+
+      ELSE
+
+        DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no se puede modificar porque no existe!!');
+
+      END IF;
+
+    END pModificarGerenteProyecto;
+
+  -- Implementación Función 2
+
+  FUNCTION fConsultarProyecto(iId NUMBER) RETURN PROYECTOS%ROWTYPE
+
+  IS
+
+    Proyecto PROYECTOS%ROWTYPE;
+
+    BEGIN
+
+      SELECT * INTO Proyecto
+      FROM Proyectos pro
+      WHERE pro.ID = iId;
+
+      RETURN Proyecto;
+
+      EXCEPTION
+
+      WHEN NO_DATA_FOUND
+      THEN DBMS_OUTPUT.PUT_LINE( 'El proyecto con id ' || iId || ' no existe!!');
+
+    END fConsultarProyecto;
+
+
+END pkProyectosNivel1;
