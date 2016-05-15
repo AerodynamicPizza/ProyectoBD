@@ -12,9 +12,21 @@ namespace GestionProyectos.Paneles
 {
     public partial class PanelLogin : UserControl
     {
-        public PanelLogin()
+
+        VentanaPrincipal principal;
+
+        public PanelLogin(VentanaPrincipal vp)
         {
             InitializeComponent();
+            principal = vp;
+        }
+
+        private void botonEntrar_Click(object sender, EventArgs e)
+        {
+            string username = textBoxUsername.Text;
+            string pass = textBoxPass.Text;
+
+            principal.VerificarLogin(username, pass);
         }
     }
 }

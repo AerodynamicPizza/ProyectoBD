@@ -16,5 +16,11 @@ namespace GestionProyectos.Dialogos
         {
             InitializeComponent();
         }
+
+        private void buttonAgregarCategoria_Click(object sender, EventArgs e)
+        {
+            DialogoAgregarCategoria dac = new DialogoAgregarCategoria();
+            dac.ShowDialog();
+        }
     }
 }

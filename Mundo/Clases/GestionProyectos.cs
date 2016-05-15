@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mundo.Clases
 {
-    class GestionProyectos
+    public class GestionadorProyectos
     {
     }
 }

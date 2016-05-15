@@ -87,6 +87,7 @@
             this.botonEntrar.TabIndex = 5;
             this.botonEntrar.Text = "Entrar";
             this.botonEntrar.UseVisualStyleBackColor = true;
+            this.botonEntrar.Click += new System.EventHandler(this.botonEntrar_Click);
             // 
             // PanelLogin
             // 
